@@ -25,26 +25,7 @@ public class Start {
             p1.add(d.deal());
             p2.add(d.deal());
         }
-        for (Card i: p2) {
-            int count = 0;
-            for (Card j: p2) {
-                if (i.getFace() == j.getFace()) {
-                    count++;
-                }
-            }
-            if (count == 2) {
-                p2.remove(i);
-                p2.remove(i);
-
-            }
-        }
-        System.out.println("Player 1's hand:");
-        System.out.print(BLUE);
-        for (Card i: p1) {
-            System.out.print(i.getFace() + ", ");
-        }
-        System.out.print(RESET);
-        System.out.println();
+        matchp2(p1, p2);
         boolean running = true;
         while (running) {
             boolean running1 = true;
@@ -76,22 +57,22 @@ public class Start {
                 }
                 System.out.println("Player 1's hand:");
                 System.out.print(BLUE);
-                for (Card i: p1) {
-                    System.out.print(i.getFace() + ", ");
+                for (Card il: p1) {
+                    System.out.print(il.getFace() + ", ");
                 }
                 System.out.print(RESET);
                 System.out.println();
             }
-            for (Card i: p2) {
+            for (Card il: p2) {
                 int count = 0;
                 for (Card j: p2) {
-                    if (i.getFace() == j.getFace()) {
+                    if (il.getFace() == j.getFace()) {
                         count++;
                     }
                 }
                 if (count == 2) {
-                    p2.remove(i);
-                    p2.remove(i);
+                    p2.remove(il);
+                    p2.remove(il);
                     match2++;
                 }
             }
@@ -100,10 +81,10 @@ public class Start {
             Card card = p2.get(random);
             System.out.println("Player 2 asked for a " + card.getFace());
             boolean hasCard = false;
-            for (Card i: p1) {
-                if (i.getFace() == card.getFace()) {
+            for (Card il: p1) {
+                if (il.getFace() == card.getFace()) {
                     hasCard = true;
-                    p1.remove(i);
+                    p1.remove(il);
                     p2.remove(card);
                     break;
                 }
@@ -113,32 +94,52 @@ public class Start {
             } else {
                 System.out.println("Player 1 did not have a " + card.getFace());
                 p2.add(d.deal());
+                matchp2(p1, p2);
             }
             System.out.println("Player 2 has " + p2.size() + " cards");
             System.out.println("There are " + d.getNumCardsInDeck() + " cards left in the deck");
-            for (Card i: p2) {
-                int count = 0;
-                for (Card j: p2) {
-                    if (i.getFace() == j.getFace()) {
-                        count++;
-                    }
-                }
-                if (count == 2) {
-                    p2.remove(i);
-                    p2.remove(i);
-
-                }
+            if (d.getNumCardsInDeck() == 0) {
+                running = false;
+                running1 = false;
             }
 
-            System.out.println("Player 1's hand:");
-            System.out.print(BLUE);
-            for (Card i: p1) {
-                System.out.print(i.getFace() + ", ");
-            }
-            System.out.print(RESET);
-            System.out.println();
         }
+        System.out.println("Player 1 has " + match1 + " matches");
+        System.out.println("Player 2 has " + match2 + " matches");
+        if (match1 > match2) {
+            System.out.println("Player 1 wins!");
+        } else if (match2 > match1) {
+            System.out.println("Player 2 wins!");
+        } else {
+            System.out.println("It's a tie!");
+        }
+    }
 
+    private static void matchp2(ArrayList<Card> p1, ArrayList<Card> p2) {
+        ArrayList < Card > cards = new ArrayList < Card > ();
+        for (Card i: p2) {
+            int count = 0;
+            for (Card j: p2) {
+                if (i.getFace() == j.getFace()) {
+                    count++;
+                }
+            }
+            if (count == 2) {
+                cards.add(i);
+            }
+        }
+        for (Card i: cards) {
+            p2.remove(i);
+            p2.remove(i);
+            match2++;
+        }
+        System.out.println("Player 1's hand:");
+        System.out.print(BLUE);
+        for (Card i: p1) {
+            System.out.print(i.getFace() + ", ");
+        }
+        System.out.print(RESET);
+        System.out.println();
     }
 
     private static void askForCard(ArrayList < Card > p1, ArrayList < Card > p2) {
@@ -151,6 +152,7 @@ public class Start {
             if (i.getFace() == card) {
                 hasCard = true;
                 p2.remove(i);
+                p1.add(i);
                 break;
             }
         }
